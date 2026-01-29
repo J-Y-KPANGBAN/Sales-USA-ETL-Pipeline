@@ -1,0 +1,18 @@
+[INFO] 29-01-26 23:36:30 - Lecture réussie : C:/Users/Jean-YvesDG/Downloads/MES_PROJETS_REALISES/MES_PROJETS_REALISES/VENTE_USA/Donnees_csv_base\Sales_April_2019.csv
+[INFO] 29-01-26 23:36:30 - Lecture réussie : C:/Users/Jean-YvesDG/Downloads/MES_PROJETS_REALISES/MES_PROJETS_REALISES/VENTE_USA/Donnees_csv_base\Sales_August_2019.csv
+[INFO] 29-01-26 23:36:30 - Lecture réussie : C:/Users/Jean-YvesDG/Downloads/MES_PROJETS_REALISES/MES_PROJETS_REALISES/VENTE_USA/Donnees_csv_base\Sales_December_2019.csv
+[INFO] 29-01-26 23:36:30 - Lecture réussie : C:/Users/Jean-YvesDG/Downloads/MES_PROJETS_REALISES/MES_PROJETS_REALISES/VENTE_USA/Donnees_csv_base\Sales_February_2019.csv
+[INFO] 29-01-26 23:36:30 - Lecture réussie : C:/Users/Jean-YvesDG/Downloads/MES_PROJETS_REALISES/MES_PROJETS_REALISES/VENTE_USA/Donnees_csv_base\Sales_January_2019.csv
+[INFO] 29-01-26 23:36:30 - Lecture réussie : C:/Users/Jean-YvesDG/Downloads/MES_PROJETS_REALISES/MES_PROJETS_REALISES/VENTE_USA/Donnees_csv_base\Sales_July_2019.csv
+[INFO] 29-01-26 23:36:30 - Lecture réussie : C:/Users/Jean-YvesDG/Downloads/MES_PROJETS_REALISES/MES_PROJETS_REALISES/VENTE_USA/Donnees_csv_base\Sales_June_2019.csv
+[INFO] 29-01-26 23:36:31 - Lecture réussie : C:/Users/Jean-YvesDG/Downloads/MES_PROJETS_REALISES/MES_PROJETS_REALISES/VENTE_USA/Donnees_csv_base\Sales_March_2019.csv
+[INFO] 29-01-26 23:36:31 - Lecture réussie : C:/Users/Jean-YvesDG/Downloads/MES_PROJETS_REALISES/MES_PROJETS_REALISES/VENTE_USA/Donnees_csv_base\Sales_May_2019.csv
+[INFO] 29-01-26 23:36:31 - Lecture réussie : C:/Users/Jean-YvesDG/Downloads/MES_PROJETS_REALISES/MES_PROJETS_REALISES/VENTE_USA/Donnees_csv_base\Sales_November_2019.csv
+[INFO] 29-01-26 23:36:31 - Lecture réussie : C:/Users/Jean-YvesDG/Downloads/MES_PROJETS_REALISES/MES_PROJETS_REALISES/VENTE_USA/Donnees_csv_base\Sales_October_2019.csv
+[INFO] 29-01-26 23:36:31 - Lecture réussie : C:/Users/Jean-YvesDG/Downloads/MES_PROJETS_REALISES/MES_PROJETS_REALISES/VENTE_USA/Donnees_csv_base\Sales_September_2019.csv
+[INFO] 29-01-26 23:36:34 - Transformation terminée (Star Schema + IDs ajoutés)
+[INFO] 29-01-26 23:36:49 - Table dim_date chargée dans PostgreSQL
+[INFO] 29-01-26 23:36:58 - Table dim_adresse chargée dans PostgreSQL
+[INFO] 29-01-26 23:37:08 - Table dim_commande chargée dans PostgreSQL
+[INFO] 29-01-26 23:37:26 - Table ventes chargée dans PostgreSQL
+[INFO] 29-01-26 23:37:26 - ETL terminé avec succès
