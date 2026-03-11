@@ -97,9 +97,10 @@ python main.py
 
 ---
 
-## 📈 Dashboard Power BI — en cours
+## 📈 Dashboard Power BI 
 
-Connexion PostgreSQL → Power BI en cours de développement.
+Connexion PostgreSQL → Power BI
+.
 KPIs prévus : CA mensuel, Top Produits, Analyse Géographique USA.
 
 ---
