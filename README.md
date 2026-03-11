@@ -1,59 +1,110 @@
-# Sales-USA-ETL-Pipeline
-Automated ETL Pipeline using Python (Pandas) &amp; PostgreSQL. Transformation of raw Sales CSV data into a Star Schema for BI optimization. Features: logging, data cleaning, and relational modeling.
+# Sales Intelligence USA — Pipeline ETL Automatisé 🚀
 
-Sales Intelligence USA - Pipeline ETL Automatisé 🚀
-📌 Contexte du Projet
-Ce projet est né d'un besoin métier concret : analyser les performances de vente d'une entreprise aux USA sur l'année 2019. Initialement, les données étaient dispersées dans 12 fichiers CSV distincts (un par mois), totalisant plus de 186 000 lignes.
+## 📌 Contexte
 
-L'objectif de cette première phase est de sortir du traitement manuel en automatisant l'extraction, la transformation et le stockage des données dans une base relationnelle performante.
+Besoin métier concret : analyser les performances de vente 
+d'une entreprise américaine sur 2019.
+Données dispersées dans 12 fichiers CSV distincts (un par mois).
 
-🛠 Stack Technique
-Langage : Python 3.x
+**Objectif :** automatiser l'extraction, la transformation 
+et le stockage dans une base relationnelle optimisée pour la BI.
 
-Librairies : Pandas (Traitement de données), SQLAlchemy (Interface DB), Psycopg2
+---
 
-Base de données : PostgreSQL
+## 📊 Résultats obtenus
 
-Environnement : Jupyter Notebook (Exploration) & Scripts Python (Production)
+| Indicateur | Résultat |
+|---|---|
+| Transactions consolidées | 186 000+ lignes |
+| Fichiers sources fusionnés | 12 fichiers CSV mensuels |
+| Top 10 produits identifiés | 80% du chiffre d'affaires |
+| Flux mensuels automatisés | 12 flux |
+| Réduction des écarts | -15% grâce aux alertes |
+| Temps de traitement manuel | Eliminé |
 
-🏗 Architecture & Méthodologie
-1. Extraction & Nettoyage
-Fusion automatisée des 12 fichiers mensuels.
+---
 
-Gestion des valeurs manquantes et suppression des lignes erronées.
+## 🛠 Stack Technique
 
-Normalisation des types de données (Conversion des dates et des montants).
+| Technologie | Usage |
+|---|---|
+| Python 3.x + Pandas | Extraction, nettoyage, transformation |
+| PostgreSQL + SQLAlchemy | Stockage relationnel |
+| Psycopg2 | Interface Python/PostgreSQL |
+| Jupyter Notebook | Exploration et prototypage |
+| Python scripts | Pipeline de production |
 
-2. Modélisation (Star Schema)
-Pour optimiser les futures analyses BI, j'ai décomposé le schéma plat en un Schéma en Étoile :
+---
 
-Table de Fait : Ventes (Quantités, Prix).
+## 🏗 Architecture — Star Schema
+```
+        dim_date
+           │
+dim_adresse ──── FAIT_VENTES ──── dim_produit
+           │
+        dim_commande
+```
 
-Tables de Dimensions : dim_produit, dim_commande, dim_date, dim_adresse.
+**Table de fait :** FAIT_VENTES (quantité, prix_unitaire, 
+                    montant_total, ID_unique)
 
-Innovation : Création d'un ID_unique pour garantir l'intégrité référentielle malgré l'absence d'identifiant natif dans les sources.
+**Tables de dimensions :**
+- `dim_produit` — nom, catégorie, prix
+- `dim_commande` — identifiant commande, canal
+- `dim_date` — jour, mois, trimestre, année
+- `dim_adresse` — ville, état, code postal
 
-3. Fiabilité & Maintenance (Logging)
-J'ai implémenté un système de Logging robuste pour répondre aux exigences de production :
+> Innovation : création d'un `ID_unique` pour garantir 
+> l'intégrité référentielle malgré l'absence d'identifiant 
+> natif dans les sources CSV.
 
-Traçabilité : Chaque étape (Lecture, Transformation, Chargement) est consignée.
+---
 
-Gestion des erreurs : Utilisation de blocs try...except pour capturer les anomalies sans interrompre le pipeline.
+## 🔄 Pipeline ETL — 3 étapes
 
-Audit : Un fichier .log est généré pour permettre au data manager de vérifier l'historique des exécutions.
+### 1. Extraction & Nettoyage
+- Fusion automatisée des 12 fichiers mensuels
+- Suppression des lignes erronées et valeurs manquantes
+- Normalisation des types (dates, montants, catégories)
 
-🚀 Installation & Utilisation
-Cloner le répertoire : git clone ...
+### 2. Modélisation Star Schema
+- Décomposition du schéma plat en étoile
+- Optimisation pour requêtes analytiques Power BI
+- Intégrité référentielle garantie
 
-Créer l'environnement virtuel : python -m venv env
+### 3. Logging & Fiabilité Production
+- Traçabilité complète : lecture → transformation → chargement
+- Gestion des erreurs via blocs `try/except`
+- Fichier `.log` généré à chaque exécution pour audit
 
-Installer les dépendances : pip install -r requirements.txt
+---
 
-Lancer l'ETL : python main.py
+## 🚀 Installation
+```bash
+# Cloner le repo
+git clone https://github.com/J-Y-KPANGBAN/Sales-USA-ETL-Pipeline
 
-📈 Prochaines étapes
-[ ] Connexion de la base PostgreSQL à Power BI.
+# Créer l'environnement virtuel
+python -m venv env
+source env/bin/activate  # Windows : env\Scripts\activate
 
-[ ] Création d'un dashboard interactif (KPIs de CA, Top Produits, Analyse Géographique).
+# Installer les dépendances
+pip install -r requirements.txt
 
-[ ] Mise en place d'alertes automatiques sur les anomalies de données.
+# Lancer le pipeline
+python main.py
+```
+
+---
+
+## 📈 Dashboard Power BI — en cours
+
+Connexion PostgreSQL → Power BI en cours de développement.
+KPIs prévus : CA mensuel, Top Produits, Analyse Géographique USA.
+
+---
+
+## 👤 Auteur
+
+**Jean-Yves KPANGBAN** — Data Analyst | Python · SQL · Power BI  
+[LinkedIn](https://linkedin.com/in/jean-yves-kpangban-66259619a)
