@@ -35,21 +35,11 @@ def generate_sales_file_paths(base_path):
 # EXTRACT
 # =====================================================
 def extract(file_list):
-    """Lit tous les fichiers CSV et les concatène"""
-    dfs = []
-    for file in file_list:
-        df = pd.read_csv(file)
-        dfs.append(df)
-        log.info(f"Lecture réussie : {file}")
-    return pd.concat(dfs, ignore_index=True)
-
-# =====================================================
-# TRANSFORM
-# =====================================================
 def transform(data):
-    """Nettoyage + création du Star Schema + IDs pour ventes"""
 
-    # Normalisation colonnes
+    # ================================
+    # Nettoyage
+    # ================================
     data.columns = [
         "Order_ID",
         "Product",
@@ -59,61 +49,87 @@ def transform(data):
         "Purchase_Address"
     ]
 
-    # Conversion types
     data["Order_ID"] = pd.to_numeric(data["Order_ID"], errors="coerce")
     data["Quantity_Ordered"] = pd.to_numeric(data["Quantity_Ordered"], errors="coerce")
     data["Price_Each"] = pd.to_numeric(data["Price_Each"], errors="coerce")
     data["Order_Date"] = pd.to_datetime(data["Order_Date"], format="%m/%d/%y %H:%M", errors="coerce")
 
-    # Supprimer lignes invalides
     data.dropna(inplace=True)
     data = data.reset_index(drop=True)
 
-    # =================================================
+    # ================================
+    # DIM PRODUCT
+    # ================================
+    dim_product = data[["Product", "Price_Each"]].drop_duplicates().reset_index(drop=True)
+    dim_product["id_product"] = dim_product.index + 1
+
+    # ================================
     # DIM DATE
-    # =================================================
+    # ================================
     dim_date = pd.DataFrame()
-    dim_date["Order_Date"] = data["Order_Date"]
-    dim_date["Date"] = data["Order_Date"].dt.date
-    dim_date["Heure"] = data["Order_Date"].dt.time
-    dim_date["Annee"] = data["Order_Date"].dt.year
-    dim_date["Mois"] = data["Order_Date"].dt.month
-    dim_date["Jour"] = data["Order_Date"].dt.day
-    dim_date["ID_Date"] = range(1, len(dim_date)+1)
+    dim_date["order_date"] = data["Order_Date"]
+    dim_date["year"] = data["Order_Date"].dt.year
+    dim_date["month"] = data["Order_Date"].dt.month
+    dim_date["day"] = data["Order_Date"].dt.day
+    dim_date["hour"] = data["Order_Date"].dt.hour
 
-    # =================================================
-    # DIM ADRESSE
-    # =================================================
+    dim_date = dim_date.drop_duplicates().reset_index(drop=True)
+    dim_date["id_date"] = dim_date.index + 1
+
+    # ================================
+    # DIM REGION
+    # ================================
     split_addr = data["Purchase_Address"].str.split(",", expand=True)
-    dim_adresse = pd.DataFrame()
-    dim_adresse["Adresse"] = split_addr[0].str.strip()
-    dim_adresse["Ville"] = split_addr[1].str.strip()
-    dim_adresse["Etat"] = split_addr[2].str.strip().str.split(" ").str[0]
-    dim_adresse["Code_postal"] = split_addr[2].str.strip().str.split(" ").str[1]
-    dim_adresse["ID_Adresse"] = range(1, len(dim_adresse)+1)
 
-    # =================================================
-    # DIM COMMANDE
-    # =================================================
-    dim_commande = data[["Order_ID", "Product", "Quantity_Ordered"]].copy()
-    dim_commande["ID_Commande"] = range(1, len(dim_commande)+1)
+    dim_region = pd.DataFrame()
+    dim_region["street"] = split_addr[0].str.strip()
+    dim_region["city"] = split_addr[1].str.strip()
+    dim_region["state"] = split_addr[2].str.strip().str.split(" ").str[0]
+    dim_region["zip_code"] = split_addr[2].str.strip().str.split(" ").str[1]
 
-    # =================================================
-    # TABLE VENTES
-    # =================================================
-    ventes = pd.DataFrame()
-    ventes["ID_Vente"] = range(1, len(data)+1)
-    ventes["ID_Commande"] = dim_commande["ID_Commande"]
-    ventes["Order_Date"] = dim_date["Date"]
-    ventes["Quantity_Ordered"] = data["Quantity_Ordered"]
-    ventes["Price_Each"] = data["Price_Each"]
-    ventes["Total_Revenue"] = ventes["Price_Each"] * ventes["Quantity_Ordered"]
+    dim_region = dim_region.drop_duplicates().reset_index(drop=True)
+    dim_region["id_adresse"] = dim_region.index + 1
 
+    # ================================
+    # FACT TABLE
+    # ================================
 
-    log.info("Transformation terminée (Star Schema + IDs ajoutés)")
+    # Merge avec produit
+    fact_sales = data.merge(dim_product, on=["Product", "Price_Each"], how="left")
 
-    return dim_date, dim_adresse, dim_commande, ventes
+    # Merge avec date
+    fact_sales = fact_sales.merge(dim_date, left_on="Order_Date", right_on="order_date", how="left")
 
+    # Merge avec région
+    temp_region = dim_region.copy()
+    fact_sales["street"] = split_addr[0].str.strip()
+    fact_sales["city"] = split_addr[1].str.strip()
+    fact_sales["state"] = split_addr[2].str.strip().str.split(" ").str[0]
+    fact_sales["zip_code"] = split_addr[2].str.strip().str.split(" ").str[1]
+
+    fact_sales = fact_sales.merge(temp_region, on=["street", "city", "state", "zip_code"], how="left")
+
+    # Construire fact
+    fact_sales = fact_sales[[
+        "Order_ID",
+        "id_product",
+        "id_date",
+        "id_adresse",
+        "Quantity_Ordered",
+        "Price_Each"
+    ]]
+
+    fact_sales["id_fact"] = fact_sales.index + 1
+    fact_sales["revenue"] = fact_sales["Quantity_Ordered"] * fact_sales["Price_Each"]
+
+    fact_sales.rename(columns={
+        "Quantity_Ordered": "quantity",
+        "Price_Each": "price"
+    }, inplace=True)
+
+    log.info("Transformation OK (Star Schema propre)")
+
+    return dim_date, dim_region, dim_product, fact_sales
 # =====================================================
 # LOAD
 # =====================================================
