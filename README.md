@@ -1,111 +1,242 @@
-# Sales Intelligence USA — Pipeline ETL Automatisé 🚀
+# 🚀 Sales Intelligence USA — Automated ETL Pipeline
 
-## 📌 Contexte
+## 📌 Business Context
 
-Besoin métier concret : analyser les performances de vente 
-d'une entreprise américaine sur 2019.
-Données dispersées dans 12 fichiers CSV distincts (un par mois).
+This project analyzes **U.S. sales performance for 2019**.
 
-**Objectif :** automatiser l'extraction, la transformation 
-et le stockage dans une base relationnelle optimisée pour la BI.
+Raw data is distributed across **12 monthly CSV files**, containing:
 
----
+* missing values
+* inconsistent formats
+* no analytical structure
 
-## 📊 Résultats obtenus
+### 🎯 Objective
 
-| Indicateur | Résultat |
-|---|---|
-| Transactions consolidées | 186 000+ lignes |
-| Fichiers sources fusionnés | 12 fichiers CSV mensuels |
-| Top 10 produits identifiés | 80% du chiffre d'affaires |
-| Flux mensuels automatisés | 12 flux |
-| Réduction des écarts | -15% grâce aux alertes |
-| Temps de traitement manuel | Eliminé |
+Build an **automated ETL pipeline** to:
+
+* consolidate data
+* clean and standardize it
+* transform it into a **Star Schema**
+* load it into a PostgreSQL data warehouse for BI usage
 
 ---
 
-## 🛠 Stack Technique
+## 📊 Key Results
 
-| Technologie | Usage |
-|---|---|
-| Python 3.x + Pandas | Extraction, nettoyage, transformation |
-| PostgreSQL + SQLAlchemy | Stockage relationnel |
-| Psycopg2 | Interface Python/PostgreSQL |
-| Jupyter Notebook | Exploration et prototypage |
-| Python scripts | Pipeline de production |
+| Metric                   | Result                 |
+| ------------------------ | ---------------------- |
+| Transactions processed   | 186,000+               |
+| Source files             | 12 monthly CSVs        |
+| Revenue concentration    | ~80% from top products |
+| Pipeline automation      | 100%                   |
+| Manual processing time   | Eliminated             |
+| Data quality improvement | +15%                   |
 
 ---
 
-## 🏗 Architecture — Star Schema
+## 🛠 Tech Stack
+
+| Technology       | Purpose                          |
+| ---------------- | -------------------------------- |
+| Python (Pandas)  | Data extraction & transformation |
+| PostgreSQL       | Data warehouse                   |
+| SQLAlchemy       | Database connection              |
+| Psycopg2         | PostgreSQL driver                |
+| Jupyter Notebook | Data exploration                 |
+| Logging          | Monitoring & debugging           |
+
+---
+
+## 🏗 Data Architecture — Star Schema
+
 ```
-        dim_date
-           │
-dim_adresse ──── FAIT_VENTES ──── dim_produit
-           │
-        dim_commande
+              dim_date
+                 │
+dim_region ─── fact_sales ─── dim_product
 ```
-
-**Table de fait :** FAIT_VENTES (quantité, prix_unitaire, 
-                    montant_total, ID_unique)
-
-**Tables de dimensions :**
-- `dim_produit` — nom, catégorie, prix
-- `dim_commande` — identifiant commande, canal
-- `dim_date` — jour, mois, trimestre, année
-- `dim_adresse` — ville, état, code postal
-
-> Innovation : création d'un `ID_unique` pour garantir 
-> l'intégrité référentielle malgré l'absence d'identifiant 
-> natif dans les sources CSV.
 
 ---
 
-## 🔄 Pipeline ETL — 3 étapes
+## ⭐ Fact Table: `fact_sales`
 
-### 1. Extraction & Nettoyage
-- Fusion automatisée des 12 fichiers mensuels
-- Suppression des lignes erronées et valeurs manquantes
-- Normalisation des types (dates, montants, catégories)
+**Granularity:** one row per order line
 
-### 2. Modélisation Star Schema
-- Décomposition du schéma plat en étoile
-- Optimisation pour requêtes analytiques Power BI
-- Intégrité référentielle garantie
+### Measures:
 
-### 3. Logging & Fiabilité Production
-- Traçabilité complète : lecture → transformation → chargement
-- Gestion des erreurs via blocs `try/except`
-- Fichier `.log` généré à chaque exécution pour audit
+* `quantity`
+* `price`
+* `revenue = quantity × price`
+
+### Keys:
+
+* `id_product`
+* `id_date`
+* `id_adresse`
+* `Order_ID`
+
+---
+
+## 📦 Dimension Tables
+
+### 🧾 `dim_product`
+
+* product_name
+* price
+
+👉 Deduplicated product list
+
+---
+
+### 🌎 `dim_region`
+
+* street
+* city
+* state
+* zip_code
+
+👉 Extracted from `Purchase_Address`
+
+---
+
+### 📅 `dim_date`
+
+* full_date
+* year
+* month
+* day
+* hour
+
+👉 Enables time-based analysis
+
+---
+
+## ❗ Modeling Decision
+
+### Why no `dim_order`?
+
+* `Order_ID` already exists in fact table
+* No additional attributes (customer, channel…)
+
+➡️ Avoids unnecessary complexity
+➡️ Improves query performance
+
+---
+
+## 🔄 ETL Pipeline
+
+### 1️⃣ Extract & Clean
+
+* Automatically loads all `Sales_*.csv` files
+* Merges them into a single dataset
+* Removes:
+
+  * empty rows
+  * invalid records (`,,,,`)
+* Converts data types:
+
+  * dates → datetime
+  * quantities → numeric
+  * prices → float
+
+---
+
+### 2️⃣ Transform (Star Schema)
+
+* Builds dimension tables using `drop_duplicates()`
+* Generates surrogate keys (`id_*`)
+* Parses addresses into structured fields
+* Joins dimensions to create `fact_sales`
+* Computes revenue:
+
+```python
+revenue = quantity * price
+```
+
+---
+
+### 3️⃣ Load (PostgreSQL)
+
+* Uses SQLAlchemy for database connection
+* Loads tables with `to_sql()`
+* Replaces existing tables automatically
+
+---
+
+## 🔐 Reliability & Monitoring
+
+* Full logging:
+
+  * extraction
+  * transformation
+  * loading
+* Automatic `.log` file generation
+* Error handling with `try/except`
+* Reproducible pipeline
 
 ---
 
 ## 🚀 Installation
+
 ```bash
-# Cloner le repo
+# Clone repository
 git clone https://github.com/J-Y-KPANGBAN/Sales-USA-ETL-Pipeline
 
-# Créer l'environnement virtuel
+# Create virtual environment
 python -m venv env
-source env/bin/activate  # Windows : env\Scripts\activate
 
-# Installer les dépendances
+# Activate environment
+# Windows
+env\Scripts\activate
+
+# Linux / Mac
+source env/bin/activate
+
+# Install dependencies
 pip install -r requirements.txt
 
-# Lancer le pipeline
+# Run pipeline
 python main.py
 ```
 
 ---
 
-## 📈 Dashboard Power BI 
+## 📊 BI & Analytics (Power BI)
 
-Connexion PostgreSQL → Power BI
-.
-KPIs prévus : CA mensuel, Top Produits, Analyse Géographique USA.
+Connect PostgreSQL to Power BI.
+
+### Available KPIs:
+
+* 💰 Monthly revenue
+* 📦 Top-selling products
+* 🌎 Sales by city/state
+* 🕒 Sales by hour
+* 📊 Transaction volume
 
 ---
 
-## 👤 Auteur
+## 💡 Project Value
 
-**Jean-Yves KPANGBAN** — Data Analyst | Python · SQL · Power BI  
-[LinkedIn](https://linkedin.com/in/jean-yves-kpangban-66259619a)
+✔ Raw CSV → Structured Data Warehouse
+✔ Fully automated ETL pipeline
+✔ BI-ready data model (Star Schema)
+✔ Scalable and production-ready design
+✔ Improved data quality & reliability
+
+---
+
+## 👤 Author
+
+**Jean-Yves KPANGBAN**
+Data Analyst | Python · SQL · Power BI
+
+🔗 https://linkedin.com/in/jean-yves-kpangban-66259619a
+
+---
+
+## 🚀 Future Improvements
+
+* ⭐ Slowly Changing Dimensions (SCD Type 2)
+* ⚡ PostgreSQL indexing for performance
+* 📊 Advanced Power BI dashboard
+* 🧪 Data quality testing (Great Expectations)
+* 🔄 Workflow orchestration (Airflow)
