@@ -49,11 +49,9 @@ Build an **automated ETL pipeline** to:
 
 ## 🏗 Data Architecture — Star Schema
 
-```
-              dim_date
-                 │
-dim_region ─── fact_sales ─── dim_product
-```
+<p align="center">
+  <img src="images/star_schema.png" width="700"/>
+</p>
 
 ---
 
