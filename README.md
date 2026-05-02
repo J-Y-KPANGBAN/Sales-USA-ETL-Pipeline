@@ -19,6 +19,12 @@ Build an **automated ETL pipeline** to:
 * transform it into a **Star Schema**
 * load it into a PostgreSQL data warehouse for BI usage
 
+* 
+<p align="center">
+  <img src="image/sales_ETL.png" width="1000"/>
+  <br>
+  <em>Figure: ETL Sales Data Warehouse</em>
+</p>
 ---
 
 ## 📊 Key Results
