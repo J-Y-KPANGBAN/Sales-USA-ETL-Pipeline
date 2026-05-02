@@ -35,6 +35,14 @@ def generate_sales_file_paths(base_path):
 # EXTRACT
 # =====================================================
 def extract(file_list):
+ """Lit tous les fichiers CSV et les concatène""" 
+ dfs = [] 
+ for file in file_list: 
+  df = pd.read_csv(file) 
+  dfs.append(df) 
+  log.info(f"Lecture réussie : {file}") 
+  return pd.concat(dfs, ignore_index=True) 
+# =====================================================
 def transform(data):
 
     # ================================
