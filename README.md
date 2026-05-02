@@ -175,30 +175,6 @@ revenue = quantity * price
 
 ---
 
-## 🚀 Installation
-
-```bash
-# Clone repository
-git clone https://github.com/J-Y-KPANGBAN/Sales-USA-ETL-Pipeline
-
-# Create virtual environment
-python -m venv env
-
-# Activate environment
-# Windows
-env\Scripts\activate
-
-# Linux / Mac
-source env/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run pipeline
-python main.py
-```
-
----
 
 ## 📊 BI & Analytics (Power BI)
 
@@ -230,13 +206,3 @@ Connect PostgreSQL to Power BI.
 Data Analyst | Python · SQL · Power BI
 
 🔗 https://linkedin.com/in/jean-yves-kpangban-66259619a
-
----
-
-## 🚀 Future Improvements
-
-* ⭐ Slowly Changing Dimensions (SCD Type 2)
-* ⚡ PostgreSQL indexing for performance
-* 📊 Advanced Power BI dashboard
-* 🧪 Data quality testing (Great Expectations)
-* 🔄 Workflow orchestration (Airflow)
