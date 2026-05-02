@@ -50,7 +50,7 @@ Build an **automated ETL pipeline** to:
 ## 🏗 Data Architecture — Star Schema
 
 <p align="center">
-  <img src="images/star_schema.png" width="700"/>
+  <img src="image/star_schema.png" width="700"/>
 </p>
 
 ---
