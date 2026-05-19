@@ -1,4 +1,4 @@
-# 🚀 Sales Intelligence USA — Automated ETL Pipeline
+# 🚀 Sales Intelligence USA, Automated ETL Pipeline
 
 ## 📌 Business Context
 
