@@ -157,3 +157,4 @@ def load_new_db(df, table_name):
     log.info(f"Table {table_name} chargée dans PostgreSQL")
 
     #*****************END 22-june-2025 *******
+#teste
